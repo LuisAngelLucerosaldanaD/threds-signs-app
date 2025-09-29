@@ -1,0 +1,11 @@
+<div class="fixed top-0 right-0 w-full">
+  @for (message of messages; track message; let i = $index) {
+    <app-toast-item class="p-8" [message]="message" [hideTransformOptions]="hideTransformOptions()"
+                    @toastAnimation
+                    (@toastAnimation.start)="onAnimationStart($event)"
+                    (@toastAnimation.done)="onAnimationEnd($event)"
+                    [hideTransitionOptions]="hideTransitionOptions()" [showTransformOptions]="showTransformOptions()"
+                    [showTransitionOptions]="hideTransitionOptions()" [index]="i" (onClose)="onMessageClose($event)"
+    ></app-toast-item>
+  }
+</div>

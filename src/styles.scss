@@ -1,1 +1,45 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.b-base {
+  @apply h-10 flex items-center justify-center gap-2 rounded px-4 hover:opacity-80 active:opacity-60 text-base
+}
+
+.b-link-brand {
+  @apply hover:underline flex items-center justify-center hover:opacity-80 active:opacity-60 text-base text-brand gap-2
+}
+
+.b-link-sm {
+  @apply hover:underline flex items-center justify-center hover:opacity-80 active:opacity-60 text-sm text-black/60 gap-2
+}
+
+.b-link-neutral {
+  @apply hover:underline flex items-center justify-center hover:opacity-80 gap-2 active:opacity-60 text-base text-neutral
+}
+
+.b-primary-brand {
+  @apply b-base bg-brand text-white
+}
+
+.b-primary-neutral {
+  @apply b-base bg-neutral text-white
+}
+
+.b-secondary-brand {
+  @apply b-base border border-brand text-brand
+}
+
+.b-secondary-neutral {
+  @apply b-base border border-neutral text-neutral
+}
+
+.i-field {
+  @apply flex flex-col gap-1;
+  label {
+    @apply text-black/60 text-sm;
+  }
+  input, textarea, select {
+    @apply p-2 rounded border border-black/20 w-full focus:outline-none focus:ring-2 focus:ring-neutral;
+  }
+}

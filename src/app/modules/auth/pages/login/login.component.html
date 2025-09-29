@@ -1,0 +1,56 @@
+<div class="min-h-screen w-full flex items-center justify-center bg-slate-100 md:p-4">
+  <div class="card-container">
+    <div class="w-full max-w-[400px] flex flex-col gap-4 px-8 py-12 h-fit">
+      <div class="flex flex-col w-full items-center gap-10">
+        <div class="flex flex-col w-full items-center gap-3">
+          <img
+            src="https://www.inavirtual.ed.cr/pluginfile.php/302773/mod_resource/content/5/R2final/images/firma323x126.png?crc=424459858"
+            alt="Logo DIAP" class="w-14 h-14">
+          <div class="flex flex-col items-center text-center">
+            <span class="text-black/60">Inicio de Sesión</span>
+            <span class="text-2xl text-neutral font-bold">Threds And Signs</span>
+          </div>
+        </div>
+        <form [formGroup]="loginForm" class="w-full flex flex-col gap-5">
+          <div class="i-field">
+            <label for="username">Nombre usuario</label>
+            <input formControlName="username" id="username" type="text">
+            @if (username.touched && username.invalid) {
+              <span class="text-red-600 text-xs">El nombre de usuario es requerido.</span>
+            }
+          </div>
+          <div class="i-field">
+            <label for="password">Contraseña</label>
+            <div class="relative flex w-full flex-wrap items-stretch mb-3">
+              <input class="relative" formControlName="password" id="password" type="password">
+            </div>
+            @if (password.touched && password.invalid) {
+              <span class="text-xs text-red-500">La contraseña es requerida</span>
+            }
+          </div>
+          <re-captcha formControlName="captcha" [siteKey]="captchaKey()"/>
+          <div>
+            <label class="flex items-center">
+              <input type="checkbox" class="form-checkbox mr-2" name="remember_me" formControlName="remember_me"
+                     id="remember_me">
+              <span class="text-sm text-black/60 select-none">Recuérdame y mantenme conectado</span>
+            </label>
+          </div>
+        </form>
+        <button (click)="login()" class="w-full b-primary-brand">Ingresar</button>
+      </div>
+      <div class="w-full border-t border-black/10"></div>
+      <div class="flex flex-col items-center text-center text-black/60">
+        <span class="text-sm">Threds And Signs</span>
+        <span class="text-xs">Copyright © 2025 - 2025</span>
+      </div>
+    </div>
+    <div class="w-full h-full">
+      <img class="w-full max-w-[400px] h-full object-cover"
+           src="https://www.revistaabogacia.com/wp-content/uploads/2021/05/Firma-Electronica.webp"
+           alt="Banner threds and Signs">
+    </div>
+  </div>
+</div>
+<app-block-ui [show]="false"/>
+<app-toast/>
