@@ -9,7 +9,6 @@ import {Subscription} from 'rxjs';
 import {Router, RouterLink} from '@angular/router';
 import {EnvServiceFactory} from '../../../../core/services/env/env.service.provider';
 import {HttpErrorResponse} from '@angular/common/http';
-import {OnlyNumberDirective} from '../../../../core/directives/only-number.directive';
 
 @Component({
   selector: 'app-recovery',
@@ -20,7 +19,6 @@ import {OnlyNumberDirective} from '../../../../core/directives/only-number.direc
     RecaptchaFormsModule,
     RecaptchaModule,
     ToastComponent,
-    OnlyNumberDirective,
     RouterLink
   ],
   templateUrl: './recovery.component.html',
@@ -40,11 +38,10 @@ export class RecoveryComponent implements OnDestroy {
 
   // Signals properties
   protected isLoading = signal(false);
-  protected isOtp = signal(false);
+  private timeoutHandle: any;
 
   protected recoveryForm: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
-    otp: new FormControl(''),
     captcha: new FormControl('', Validators.required)
   });
 
@@ -53,14 +50,11 @@ export class RecoveryComponent implements OnDestroy {
     this.recoveryForm.reset();
     this.isLoading.set(false);
     this.captchaKey.set('');
+    clearTimeout(this.timeoutHandle);
   }
 
   protected get email(): FormControl {
     return this.recoveryForm.get('email') as FormControl;
-  }
-
-  protected get otp(): FormControl {
-    return this.recoveryForm.get('otp') as FormControl;
   }
 
   protected recovery(): void {
@@ -90,11 +84,9 @@ export class RecoveryComponent implements OnDestroy {
             message: "Se ha enviado un correo electrónico con las instrucciones para recuperar su cuenta"
           });
 
-          this.isOtp.set(true);
-          this.email.disable();
-          this.email.updateValueAndValidity();
-          this.otp.setValidators([Validators.required]);
-          this.otp.updateValueAndValidity();
+          this.timeoutHandle = setTimeout(() => {
+            this._router.navigateByUrl('/auth/login');
+          }, 1500);
         },
         error: (error: HttpErrorResponse) => {
           this.isLoading.set(false);

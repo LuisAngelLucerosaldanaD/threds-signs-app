@@ -23,15 +23,6 @@
               }
             }
           </div>
-          @if (isOtp()) {
-            <div class="i-field">
-              <label for="otp">Código OTP</label>
-              <input formControlName="otp" id="otp" type="text" onlyNumber>
-              @if (otp.touched && otp.invalid) {
-                <span class="text-red-600 text-xs">El código OTP es requerido</span>
-              }
-            </div>
-          }
           <re-captcha formControlName="captcha" [siteKey]="captchaKey()"/>
         </form>
         <button (click)="recovery()" class="w-full b-primary-brand">Ingresar</button>
@@ -61,5 +52,5 @@
     </div>
   </div>
 </div>
-<app-block-ui [show]="false"/>
+<app-block-ui [show]="isLoading()"/>
 <app-toast/>

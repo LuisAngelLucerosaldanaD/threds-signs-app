@@ -106,6 +106,19 @@ export class AuthService {
   }
 
   /**
+   * Method that allow us to reset the password
+   * @return Observable<Response>
+   * @example
+   * private _authService = inject(AuthService);
+   * this._authService.resetPassword('123456', 'newpassword');
+   * @param otp
+   * @param password
+   */
+  public resetPassword(otp: string, password: string): Observable<Response> {
+    return this._http.patch<Response>(this._url + this._version + '/auth/reset-password', {otp, password});
+  }
+
+  /**
    * Method that allow us to set the session
    * @param session
    * @param rememberMe

@@ -59,6 +59,7 @@ export class RegisterComponent implements OnDestroy {
     this._subscriptions.unsubscribe();
     this.captchaKey.set('');
     clearTimeout(this.timeoutHandle);
+    this.registerForm.reset();
   }
 
   protected async register(): Promise<void> {
