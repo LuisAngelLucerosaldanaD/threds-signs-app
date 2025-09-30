@@ -28,6 +28,17 @@
               <span class="text-xs text-red-500">La contraseña es requerida</span>
             }
           </div>
+          @if (is2fa()) {
+            <div class="i-field">
+              <label for="otp">OTP</label>
+              <div class="relative flex w-full flex-wrap items-stretch mb-3">
+                <input class="relative" formControlName="otp" id="otp" type="text">
+              </div>
+              @if (otp.touched && otp.invalid) {
+                <span class="text-xs text-red-500">El código OTP es requerido</span>
+              }
+            </div>
+          }
           <re-captcha formControlName="captcha" [siteKey]="captchaKey()"/>
           <div>
             <label class="flex items-center">
@@ -37,7 +48,7 @@
             </label>
           </div>
         </form>
-        <button (click)="login()" class="w-full b-primary-brand">Ingresar</button>
+        <button (click)="handleLogin()" class="w-full b-primary-brand">Ingresar</button>
       </div>
       <div class="w-full border-t border-black/10"></div>
       <div class="flex flex-col items-center text-center text-black/60">

@@ -4,3 +4,7 @@ export const ACCOUNT_STATUS_CODES = {
   Pending: 8,
   Blocked: 9
 };
+
+export const TYPE_AUTH_CODES = {
+  TwoFa: 30
+}

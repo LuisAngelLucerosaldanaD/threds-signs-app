@@ -1,0 +1,26 @@
+.btn-login {
+  background-color: #15AA7A;
+  @apply w-full text-center justify-center inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest focus:outline-none focus:border-emerald-300 disabled:opacity-25 transition ease-in-out duration-150 ml-4;
+}
+
+.card-container {
+  @apply flex flex-col-reverse max-w-[800px] md:flex-row items-center mx-auto w-full md:w-[80%] md:h-[95vh] bg-white md:border md:border-black/10 md:rounded-lg md:shadow-lg md:overflow-hidden;
+}
+
+.card-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  padding: var(--padding-card, 2rem);
+  gap: .5rem;
+}
+
+.card {
+  flex-direction: column-reverse;
+}
+
+@media (min-width: 640px) {
+  .card {
+    flex-direction: row;
+  }
+}

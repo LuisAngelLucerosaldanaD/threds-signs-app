@@ -5,11 +5,12 @@ import {Router} from '@angular/router';
 import {Cipher} from '../../utils/security/cipher';
 import {JwtHelper} from '../../utils/jwt/jwt';
 import {Observable, tap} from 'rxjs';
-import {ICredentials, IRegister, ISession} from '../../models/auth/session';
+import {ICredentials, IOtp, IRegister, ISession} from '../../models/auth/session';
 import {Response} from '../../models/response';
 import {CookieService} from '../cookie/cookie.service';
 import {IGeolocation} from '../../models/auth/geo';
 import {AuthStore} from '../../store/auth.store';
+import {RESPONSE_CODES} from '../../utils/constants/response';
 
 @Injectable({
   providedIn: 'root'
@@ -50,6 +51,27 @@ export class AuthService {
   }
 
   /**
+   * Method that allow us to login with OTP
+   * @param credentials
+   * @return Observable<Response<ISession>>
+   * @example
+   * private _authService = inject(AuthService);
+   * const data = {
+   *   otp: '123456',
+   *   remember_me: true,
+   *   coordinates: '0.0,0.0'
+   * }
+   * this._authService.loginWithOtp(data);
+   */
+  public loginWithOtp(credentials: IOtp): Observable<Response<ISession>> {
+    return this._http.post<Response<ISession>>(this._url + this._version + '/auth/otp', credentials).pipe(
+      tap(res => {
+        this._setSession(res, credentials.remember_me);
+      })
+    );
+  }
+
+  /**
    * Method that allow us to register a new account
    * @return Observable<Response>
    * @example
@@ -78,9 +100,11 @@ export class AuthService {
    * @private
    */
   private _setSession(session: Response<ISession>, rememberMe: boolean): void {
-    if (session.error || !session.data || session.code !== 200) {
+    if (session.error) {
       throw new Error(session.msg);
     }
+
+    if (session.code !== RESPONSE_CODES.Success) return;
 
     this.setToken(session.data, rememberMe);
     const data = {

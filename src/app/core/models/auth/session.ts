@@ -5,11 +5,16 @@ export interface ICredentials {
   coordinates: string;
 }
 
+export interface IOtp {
+  otp: string;
+  coordinates: string;
+  remember_me: boolean;
+}
+
 export interface ISession {
   access_token: string;
   refresh_token: string;
 }
-
 
 export interface IRegister {
   name: string;

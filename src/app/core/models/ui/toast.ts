@@ -1,5 +1,7 @@
+export type TypeMessage = 'success' | 'error' | 'info' | 'warning';
+
 export interface Message {
-  type: string;
+  type: TypeMessage;
   message: string;
   id?: any;
   key?: string;

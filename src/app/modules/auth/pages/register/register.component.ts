@@ -2,15 +2,28 @@ import {Component, inject, OnDestroy, signal} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {Router} from '@angular/router';
 import {EnvServiceFactory} from '../../../../core/services/env/env.service.provider';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../../../../core/services/auth/auth.service';
 import {ToastService} from '../../../../core/services/ui/toast.service';
 import {HttpErrorResponse} from '@angular/common/http';
 import {IRegister} from '../../../../core/models/auth/session';
+import {BlockUiComponent} from '../../../../core/ui/block-ui/block-ui.component';
+import {ToastComponent} from '../../../../core/ui/toast/toast.component';
+import {RecaptchaFormsModule, RecaptchaModule} from 'ng-recaptcha';
+import {OnlyTextDirective} from '../../../../core/directives/only-text.directive';
+import {OnlyNumberDirective} from '../../../../core/directives/only-number.directive';
 
 @Component({
   selector: 'app-register',
-  imports: [],
+  imports: [
+    BlockUiComponent,
+    ToastComponent,
+    ReactiveFormsModule,
+    RecaptchaFormsModule,
+    RecaptchaModule,
+    OnlyTextDirective,
+    OnlyNumberDirective
+  ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
@@ -38,6 +51,7 @@ export class RegisterComponent implements OnDestroy {
     password: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
     birthdate: new FormControl('', [Validators.required]),
+    captcha: new FormControl('', [Validators.required]),
   });
 
   ngOnDestroy() {
@@ -60,12 +74,13 @@ export class RegisterComponent implements OnDestroy {
       name: this.registerForm.value.name.trim(),
       lastname: this.registerForm.value.lastname.trim(),
       document: this.registerForm.value.document.trim(),
-      type_document: this.registerForm.value.type_document,
+      type_document: parseInt(this.registerForm.value.type_document),
       username: this.registerForm.value.username.trim(),
       password: this.registerForm.value.password.trim(),
       email: this.registerForm.value.email.trim(),
-      birthdate: this.registerForm.value.birthdate.trim(),
+      birthdate: this.registerForm.value.birthdate.trim() + 'T00:00:00Z',
     };
+
     this.isLoading.set(true);
     this._subscriptions.add(
       this._authService.register(data).subscribe({
