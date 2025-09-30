@@ -94,6 +94,18 @@ export class AuthService {
   }
 
   /**
+   * Method that allow us to recover the account
+   * @return Observable<Response>
+   * @example
+   * private _authService = inject(AuthService);
+   * this._authService.recovery('joe.dow');
+   * @param email
+   */
+  public recovery(email: string): Observable<Response> {
+    return this._http.post<Response>(this._url + this._version + '/auth/recover', {email});
+  }
+
+  /**
    * Method that allow us to set the session
    * @param session
    * @param rememberMe

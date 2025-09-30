@@ -10,6 +10,14 @@ export const AuthRoutes: Routes = [
     loadComponent: () => import('./pages/register/register.component').then(m => m.RegisterComponent)
   },
   {
+    path: 'recovery',
+    loadComponent: () => import('./pages/recovery/recovery.component').then(m => m.RecoveryComponent)
+  },
+  {
+    path: 'verify',
+    loadComponent: () => import('./pages/verify/verify.component').then(m => m.VerifyComponent)
+  },
+  {
     path: '**',
     redirectTo: 'login',
     pathMatch: 'full'

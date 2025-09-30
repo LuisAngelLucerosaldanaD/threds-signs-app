@@ -1,0 +1,65 @@
+<div class="min-h-screen w-full flex items-center justify-center bg-slate-100 md:p-4">
+  <div class="card-container">
+    <div class="w-full max-w-[400px] flex flex-col gap-4 px-8 py-12 h-fit">
+      <div class="flex flex-col w-full items-center gap-10">
+        <div class="flex flex-col w-full items-center gap-3">
+          <img
+            src="https://www.inavirtual.ed.cr/pluginfile.php/302773/mod_resource/content/5/R2final/images/firma323x126.png?crc=424459858"
+            alt="Logo DIAP" class="w-14 h-14">
+          <div class="flex flex-col items-center text-center">
+            <span class="text-black/60">Recuperar Cuenta</span>
+            <span class="text-2xl text-neutral font-bold">Threds And Signs</span>
+          </div>
+        </div>
+        <form [formGroup]="recoveryForm" class="w-full flex flex-col gap-5">
+          <div class="i-field">
+            <label for="email">Correo electrónico</label>
+            <input formControlName="email" id="email" type="email">
+            @if (email.touched && email.invalid) {
+              @if (email.hasError('required')) {
+                <span class="text-red-600 text-xs">El correo es requerido</span>
+              } @else {
+                <span class="text-red-600 text-xs">Ingrese un correo valido</span>
+              }
+            }
+          </div>
+          @if (isOtp()) {
+            <div class="i-field">
+              <label for="otp">Código OTP</label>
+              <input formControlName="otp" id="otp" type="text" onlyNumber>
+              @if (otp.touched && otp.invalid) {
+                <span class="text-red-600 text-xs">El código OTP es requerido</span>
+              }
+            </div>
+          }
+          <re-captcha formControlName="captcha" [siteKey]="captchaKey()"/>
+        </form>
+        <button (click)="recovery()" class="w-full b-primary-brand">Ingresar</button>
+        <div class="w-full">
+          <button routerLink="/auth/login" class="w-fit b-link-neutral">
+            <div>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M7.28007 7.71995C7.42052 7.86058 7.49941 8.0512 7.49941 8.24995C7.49941 8.4487 7.42052 8.63932 7.28007 8.77995L4.81007 11.25H21.0001C21.199 11.25 21.3898 11.329 21.5304 11.4696C21.6711 11.6103 21.7501 11.801 21.7501 12C21.7501 12.1989 21.6711 12.3896 21.5304 12.5303C21.3898 12.6709 21.199 12.75 21.0001 12.75H4.81007L7.28007 15.22C7.35376 15.2886 7.41286 15.3714 7.45385 15.4634C7.49485 15.5554 7.51689 15.6547 7.51866 15.7554C7.52044 15.8561 7.50192 15.9562 7.4642 16.0495C7.42647 16.1429 7.37033 16.2278 7.29911 16.299C7.22789 16.3702 7.14306 16.4264 7.04967 16.4641C6.95628 16.5018 6.85625 16.5203 6.75555 16.5185C6.65485 16.5168 6.55553 16.4947 6.46353 16.4537C6.37153 16.4127 6.28873 16.3536 6.22007 16.28L2.47007 12.53C2.32962 12.3893 2.25073 12.1987 2.25073 12C2.25073 11.8012 2.32962 11.6106 2.47007 11.47L6.22007 7.71995C6.3607 7.5795 6.55132 7.50061 6.75007 7.50061C6.94882 7.50061 7.13945 7.5795 7.28007 7.71995Z"
+                      fill="#0F75BC"/>
+              </svg>
+            </div>
+            <span>Volver</span>
+          </button>
+        </div>
+      </div>
+      <div class="w-full border-t border-black/10"></div>
+      <div class="flex flex-col items-center text-center text-black/60">
+        <span class="text-sm">Threds And Signs</span>
+        <span class="text-xs">Copyright © 2025 - 2025</span>
+      </div>
+    </div>
+    <div class="w-full h-full">
+      <img class="w-full max-w-[400px] h-full object-cover"
+           src="https://www.revistaabogacia.com/wp-content/uploads/2021/05/Firma-Electronica.webp"
+           alt="Banner threds and Signs">
+    </div>
+  </div>
+</div>
+<app-block-ui [show]="false"/>
+<app-toast/>

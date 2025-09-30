@@ -1,6 +1,6 @@
 import {Component, inject, OnDestroy, signal} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {Router} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {EnvServiceFactory} from '../../../../core/services/env/env.service.provider';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../../../../core/services/auth/auth.service';
@@ -22,7 +22,8 @@ import {OnlyNumberDirective} from '../../../../core/directives/only-number.direc
     RecaptchaFormsModule,
     RecaptchaModule,
     OnlyTextDirective,
-    OnlyNumberDirective
+    OnlyNumberDirective,
+    RouterLink
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
