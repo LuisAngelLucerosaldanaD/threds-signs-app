@@ -95,6 +95,7 @@ export class ResetPasswordComponent implements OnDestroy, OnInit {
             type: 'success',
             message: 'Contraseña restablecida correctamente. Redirigiendo al inicio de sesión...',
           });
+          this._authService.clearTempToken();
           this.timeoutHandle = setTimeout(() => {
             this._router.navigate(['/auth/login']).then();
           }, 3000);

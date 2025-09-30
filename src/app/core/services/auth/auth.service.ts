@@ -118,6 +118,10 @@ export class AuthService {
     return this._http.patch<Response>(this._url + this._version + '/auth/reset-password', {otp, password});
   }
 
+  public verifyAccount(otp: string, coordinates: string): Observable<Response> {
+    return this._http.post<Response>(this._url + this._version + '/auth/verify', {otp, coordinates});
+  }
+
   /**
    * Method that allow us to set the session
    * @param session
@@ -237,5 +241,9 @@ export class AuthService {
 
     const payload = this._jwtHelper.decodeToken(token);
     return payload.user.id || '';
+  }
+
+  public clearTempToken(): void {
+    sessionStorage.removeItem('temp_token');
   }
 }
