@@ -13,10 +13,10 @@ export class CsrfTokenService {
   private _http = inject(HttpClient);
 
   public initializeCsrfToken(): void {
-    this._getCsrfToken().subscribe();
+    this.getCsrfToken().subscribe();
 
     interval(25 * 60 * 1000)
-      .pipe(switchMap(() => this._getCsrfToken()))
+      .pipe(switchMap(() => this.getCsrfToken()))
       .subscribe();
   }
 
@@ -24,7 +24,7 @@ export class CsrfTokenService {
    * Method that allow us to get csrf token
    * @return Observable<any>
    */
-  public _getCsrfToken(): Observable<CsrfTokenResponse> {
+  public getCsrfToken(): Observable<CsrfTokenResponse> {
     return this._http.get<CsrfTokenResponse>(this._url, {withCredentials: true}).pipe(
       tap((res) => {
         if (res.csrf_token) sessionStorage.setItem('csrf_token', res.csrf_token);

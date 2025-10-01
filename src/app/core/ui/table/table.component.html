@@ -1,0 +1,76 @@
+<div class="">
+  <table cdk-table [dataSource]="dataDisplayed()">
+    @for (header of showColumns(); track header) {
+      <ng-container cdkColumnDef="{{ header }}">
+        @if (header === 'select') {
+          <span>log</span>
+          <th cdk-header-cell *cdkHeaderCellDef class="w-[44px]">
+            <div class="p-2.5">
+              <input type="checkbox" (change)="$event ? toggleAllRows() : null"
+                     [checked]="selection.hasValue() && isAllSelected()"
+                     [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </div>
+          </th>
+          <td cdk-cell *cdkCellDef="let row" class="w-[44px]" [ngClass]="{'item-selected': selection.isSelected(row)}">
+            <div class="p-2.5">
+              <input type="checkbox" (click)="$event.stopPropagation()" (change)="$event ? toggleRow(row) : null"
+                     [checked]="selection.isSelected(row)">
+            </div>
+          </td>
+        } @else {
+          <th cdk-header-cell *cdkHeaderCellDef (click)="sortData(header)">
+            <div class="p-2.5 flex gap-1 items-center text-slate-600 cursor-pointer capitalize">
+              {{ header }}
+              @if (sortable()) {
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                     stroke="currentColor" class="size-5">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"/>
+                </svg>
+              }
+            </div>
+          </th>
+          <td cdk-cell *cdkCellDef="let element" class="p-2.5"
+              [ngClass]="{'item-selected': selection.isSelected(element)}">
+            {{ element[header] }}
+          </td>
+        }
+      </ng-container>
+    }
+
+    <tr cdk-header-row *cdkHeaderRowDef="showColumns()" class="border-b border-b-slate-200"></tr>
+    <tr cdk-row *cdkRowDef="let row; columns: showColumns();" class="row-data"></tr>
+  </table>
+</div>
+@if (paginate()) {
+  <div class="flex w-full mt-6 justify-between">
+    <div class="w-20">
+      <trs-dropdown [data]="optPages" optionName="label" [(ngModel)]="itemsPerPage" (on-change)="changePage($event)"/>
+    </div>
+    @if (selectable()) {
+      <div>
+        <trs-dropdown [data]="columns" optionName="label" placeholder="Columnas" [multiple]="true"
+                      (on-change)="selectColumn($event)" [(ngModel)]="columnsSelected"/>
+      </div>
+    }
+    <div class="flex gap-3 items-center">
+      <button class="border-slate-300 border px-2 py-1 rounded-md cursor-pointer disabled:cursor-not-allowed"
+              (click)="previousPage()" [disabled]="currentPage === 1">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+             class="size-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/>
+        </svg>
+      </button>
+      <div class="border-slate-300 border px-4 py-1 rounded-md select-none">
+        <span>{{ currentPage }}/{{ totalPages }}</span>
+      </div>
+      <button class="border-slate-300 border px-2 py-1 rounded-md cursor-pointer disabled:cursor-not-allowed"
+              (click)="nextPage()" [disabled]="currentPage === totalPages">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+             class="size-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+}

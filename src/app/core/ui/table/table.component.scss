@@ -1,0 +1,17 @@
+table {
+  width: 100%;
+}
+
+th {
+  text-align: left;
+}
+
+.row-data {
+  &:hover {
+    background-color: #f3f4f6;
+  }
+}
+
+.item-selected {
+  @apply border-gray-100;
+}

@@ -1,0 +1,68 @@
+<div cdk-overlay-origin
+     class="cursor-pointer w-full flex items-center justify-between p-2 gap-4 border rounded-md"
+     (click)="open()"
+     #fallbackOverlayOrigin="cdkOverlayOrigin"
+     #trigger>
+
+  <div class="dft-select-value">
+    @if (empty) {
+      <span class="select-none">{{ placeholder }}</span>
+    } @else {
+      <span class="dft-select-value-text">
+        <span class="mat-mdc-select-min-line">{{ triggerValue }}</span>
+      </span>
+    }
+  </div>
+
+  @if (icon()) {
+    <div class="mat-mdc-select-arrow-wrapper">
+      <div class="mat-mdc-select-arrow">
+        <svg viewBox="0 0 24 24" width="24px" height="24px" focusable="false" aria-hidden="true">
+          <path d="M7 10l5 5 5-5z"/>
+        </svg>
+      </div>
+    </div>
+  }
+</div>
+
+<ng-template
+  cdk-connected-overlay
+  cdkConnectedOverlayLockPosition
+  cdkConnectedOverlayHasBackdrop
+  cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+  [cdkConnectedOverlayDisableClose]="true"
+  [cdkConnectedOverlayPanelClass]="''"
+  [cdkConnectedOverlayScrollStrategy]="_scrollStrategy"
+  [cdkConnectedOverlayOrigin]="fallbackOverlayOrigin"
+  [cdkConnectedOverlayPositions]="_positions"
+  [cdkConnectedOverlayWidth]="_overlayWidth"
+  (backdropClick)="close()"
+  [cdkConnectedOverlayOpen]="isOpen"
+  (detach)="isOpen = false"
+  (overlayKeydown)="_handleOverlayKeydown($event)">
+  <div [@transformPanel]="isOpen ? 'showing' : 'void'"
+    role="listbox"
+    tabindex="-1"
+    class="dft-mdc-select-panel"
+    (keydown)="_handleKeydown($event)">
+    @for (item of data; track item) {
+      <div class="flex px-4 py-2 hover:bg-slate-100 items-center gap-2 cursor-pointer"
+           (click)="selectOption(item['_idOption'])" [id]="item['_idOption']">
+        @if (multiple) {
+          <input type="checkbox" [checked]="item['selected']"
+                 class="rounded-md w-5 h-5 cursor-pointer border-brand outline-none focus:ring-2 focus:ring-brand text-brand">
+        }
+
+        <span class="flex-1 select-none">{{ item[optionName] }}</span>
+        @if (!multiple && item['selected']) {
+          <div class="flex justify-end">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                 stroke="currentColor" class="size-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
+            </svg>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</ng-template>

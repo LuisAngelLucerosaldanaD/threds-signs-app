@@ -1,1 +1,128 @@
-<p>home works!</p>
+<div class="w-full h-full">
+  <div class="flex flex-wrap gap-4 items-start justify-between p-1">
+    <div class="flex-1">
+      <div class="text-muted-color font-medium leading-normal">
+        Overview
+      </div>
+      <div class="text-color text-3xl font-semibold leading-normal">
+        Welcome to Threads and Signs
+      </div>
+    </div>
+    <div class="flex gap-2 whitespace-nowrap flex-nowrap">
+      <div class="group inp-search">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+             class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
+        </svg>
+        <input type="text" placeholder="Search..." class="input input-bordered w-full max-w-xs focus:outline-none"/>
+      </div>
+      <button class="btn-alert" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+             class="size-5">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="mt-4 flex flex-wrap gap-6 items-center justify-between p-1">
+    <div class="flex p-1 bg-slate-100 rounded-md">
+      <div class="bg-white text-sm flex items-center justify-center px-2 rounded text-slate-700 cursor-pointer">Weekly
+      </div>
+      <div class="text-sm flex items-center justify-center px-2 rounded text-slate-500 cursor-pointer">Monthly</div>
+      <div class="text-sm flex items-center justify-center px-2 rounded text-slate-500 cursor-pointer">Yearly</div>
+    </div>
+    <div class="flex items-center gap-2">
+      <button type="button" class="flex items-center gap-2 bg-primary text-white rounded-md px-2 py-1 text-sm">
+        Descargar
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+             stroke="currentColor" class="size-5">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+        </svg>
+      </button>
+      <input type="date"
+             class="input input-bordered text-sm max-w-xs border rounded-lg px-3 py-1 cursor-pointer text-slate-600 focus:border-slate-400 hover:border-slate-400 outline-slate-400"/>
+    </div>
+  </div>
+  <div class="flex flex-col gap-6 mt-6">
+    <div class="w-full border border-surface rounded-2xl py-5 px-7 flex flex-col justify-between">
+      <div class="flex items-center gap-6 mb-6">
+        <div class="flex-1 text-color font-semibold leading-6">
+          Reporte Documentos Enviados
+        </div>
+        <div class="flex items-center gap-5">
+          <div class="flex items-center gap-2 ng-star-inserted">
+            <div class="w-3 h-3 rounded-full" style="background-color: rgb(148, 163, 184);"></div>
+            <span class="font-medium text-color leading-6">Finalizado</span>
+          </div>
+          <div class="flex items-center gap-2 ng-star-inserted">
+            <div class="w-3 h-3 rounded-full" style="background-color: rgb(203, 213, 225);"></div>
+            <span class="font-medium text-color leading-6">Pendiente</span>
+          </div>
+          <div class="flex items-center gap-2 ng-star-inserted">
+            <div class="w-3 h-3 rounded-full" style="background-color: rgb(226, 232, 240);"></div>
+            <span class="font-medium text-color leading-6">Con Error</span>
+          </div>
+        </div>
+      </div>
+      <canvas #reportChart class="relative" style="height: 20rem !important;"></canvas>
+    </div>
+    <div class="flex gap-6 xl:flex-row flex-col">
+      <div class="flex-1 border border-surface rounded-2xl py-5 px-7">
+        <div class="flex items-center gap-6 mb-4">
+          <div class="flex-1 text-color font-semibold leading-6">Ultimos Documentos Enviados</div>
+          <button type="button" class="flex items-center justify-center py-[7px] w-8 rounded-md hover:bg-slate-100">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                 stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/>
+            </svg>
+          </button>
+        </div>
+        <trs-table [pages]="[5, 10, 15, 20]"
+                   [data]="[
+                   {id: 23, name: 'Luis', description: 'Lucero', status: 'active'},
+                   {id: 23, name: 'Luis', description: 'Lucero', status: 'active'},
+                   {id: 23, name: 'Luis', description: 'Lucero', status: 'active'},
+                   {id: 23, name: 'Luis', description: 'Lucero', status: 'active'},
+                   {id: 23, name: 'Luis', description: 'Lucero', status: 'active'},
+                   ]"
+                   [headers]="['id', 'name', 'description', 'status']"/>
+      </div>
+      <div class="xl:w-96 border border-surface rounded-2xl py-5 px-7 flex flex-col justify-between max-h-[230px]">
+        <div class="flex items-center gap-6 mb-4">
+          <div class="flex-1 text-color font-semibold leading-6">Reporte Firmantes</div>
+          <button type="button" class="flex items-center justify-center py-[7px] w-8 rounded-md hover:bg-slate-100">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                 stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="flex flex-col gap-6 mt-4 ng-star-inserted">
+          <div class="flex items-center gap-2 ng-star-inserted">
+            <div class="w-2 h-2 rounded-full" style="background-color: rgb(245, 158, 11);"></div>
+            <div class="text-color uppercase font-medium leading-6 flex-1"> Han Firmado <span
+              class="text-muted-color">(15%)</span></div>
+            <div class="leading-6 font-medium text-color">27</div>
+          </div>
+          <div class="flex items-center gap-2 ng-star-inserted">
+            <div class="w-2 h-2 rounded-full" style="background-color: rgb(113, 113, 121);"></div>
+            <div class="text-color uppercase font-medium leading-6 flex-1"> Pendientes por Firmar <span
+              class="text-muted-color">(5%)</span></div>
+            <div class="leading-6 font-medium text-color">4</div>
+          </div>
+          <div class="flex items-center gap-2 ng-star-inserted">
+            <div class="w-2 h-2 rounded-full" style="background-color: rgb(34, 197, 94);"></div>
+            <div class="text-color uppercase font-medium leading-6 flex-1"> No Firmaron <span
+              class="text-muted-color">(25%)</span></div>
+            <div class="leading-6 font-medium text-color">12</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

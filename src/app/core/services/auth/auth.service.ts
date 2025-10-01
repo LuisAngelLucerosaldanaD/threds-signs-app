@@ -221,11 +221,9 @@ export class AuthService {
     const token = this.getToken();
     if (!token) return false;
 
-    if (!this._cipher.verifyJWT(token) || this._jwtHelper.isTokenExpired(token)) {
-      return false;
-    }
+    return !(!this._cipher.verifyJWT(token) || this._jwtHelper.isTokenExpired(token));
 
-    return true;
+
   }
 
   /**
@@ -243,7 +241,28 @@ export class AuthService {
     return payload.user.id || '';
   }
 
+  public clearSession(): void {
+    this._cookieService.delete('remember_me');
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    sessionStorage.removeItem('access_token');
+    sessionStorage.removeItem('refresh_token');
+    this._store.logout();
+  }
+
   public clearTempToken(): void {
     sessionStorage.removeItem('temp_token');
+  }
+
+  public getTempToken(): string | null {
+    return sessionStorage.getItem('temp_token');
+  }
+
+  public setTempToken(tempToken: string): void {
+    sessionStorage.setItem('temp_token', tempToken);
+  }
+
+  public isTokenValid(token: string): boolean {
+    return !(!this._cipher.verifyJWT(token) || this._jwtHelper.isTokenExpired(token));
   }
 }
