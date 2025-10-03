@@ -18,14 +18,14 @@ export const securityInterceptor: HttpInterceptorFn = (req, next) => {
   const token = authService.getToken();
   if (token) {
     req = req.clone({
-      headers: req.headers.set('Bearer', token)
+      headers: req.headers.set('Authorization', 'Bearer ' + token)
     });
   }
 
   const tokenTemp = authService.getTempToken();
   if (tokenTemp) {
     req = req.clone({
-      headers: req.headers.set('Bearer', tokenTemp)
+      headers: req.headers.set('Authorization', 'Bearer ' + tokenTemp)
     });
   }
 

@@ -1,6 +1,7 @@
-import {Component, ElementRef, OnInit, viewChild} from '@angular/core';
+import {Component, ElementRef, inject, OnInit, viewChild} from '@angular/core';
 import {Chart} from 'chart.js/auto';
 import {TableComponent} from '../../../../core/ui/table/table.component';
+import {UserStore} from '../../../../core/store/user.store';
 
 @Component({
   selector: 'app-home',
@@ -11,6 +12,9 @@ import {TableComponent} from '../../../../core/ui/table/table.component';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
+
+  // Store
+  protected readonly _userStore = inject(UserStore);
 
   protected reportCanvas = viewChild<ElementRef>('reportChart');
 

@@ -75,7 +75,6 @@ export class CookieService {
     }
     name = encodeURIComponent(name);
     const regExp = CookieService.getCookieRegExp(name);
-    console.log(this.document.cookie)
     return regExp.test(this.document.cookie);
   }
 

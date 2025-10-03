@@ -69,7 +69,8 @@
         <span class="hidden">・</span><span class="hidden">Chat</span>
       </div>
       <div class="w-full pt-5 border-t border-slate-300 mt-2">
-        <img src="https://www.primefaces.org/cdn/primevue/images/landing/apps/main-avatar.png" alt="img profile" class="rounded-full w-12 h-12 select-none text-xl">
+        <img [src]="_userStore.user()?.setting?.profile_picture" alt="img profile"
+             class="rounded-full w-12 h-12 select-none text-xl">
       </div>
     </div>
   </div>
@@ -77,3 +78,5 @@
     <router-outlet/>
   </div>
 </div>
+<app-toast/>
+<app-block-ui [show]="isLoading()"/>

@@ -122,4 +122,12 @@ export class JwtHelper {
 
     return !(date.valueOf() > new Date().valueOf() + offsetSeconds * 1000);
   }
+
+  public getRemainingTime(token: string): number {
+    const date = this.getTokenExpirationDate(token);
+    if (date === null) return 0;
+    const now = new Date();
+    const diff = date.getTime() - now.getTime();
+    return Math.max(0, diff);
+  }
 }

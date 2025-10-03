@@ -11,6 +11,7 @@ import {CookieService} from '../cookie/cookie.service';
 import {IGeolocation} from '../../models/auth/geo';
 import {AuthStore} from '../../store/auth.store';
 import {RESPONSE_CODES} from '../../utils/constants/response';
+import {db} from '../db/db.service';
 
 @Injectable({
   providedIn: 'root'
@@ -72,6 +73,37 @@ export class AuthService {
   }
 
   /**
+   * Method that allow us to refresh the access token
+   * @return Observable<Response<string>>
+   * @example
+   * private _authService = inject(AuthService);
+   * this._authService.refreshToken();
+   */
+  public refreshToken(): Observable<Response<string>> {
+    const refresh = this.getRefreshToken();
+    return this._http.put<Response<string>>(this._url + this._version + "/auth/refresh-token", {refresh_token: refresh}).pipe(
+      tap(res => {
+        if (res.error) return;
+
+        if (res.code !== RESPONSE_CODES.Success) return;
+
+        const session: ISession = {
+          refresh_token: refresh || '',
+          access_token: res.data
+        }
+        const remember = this._cookieService.get('remember_me') === 'true';
+        this.setToken(session, remember);
+        const data = {
+          token: session.access_token,
+          isAuth: true,
+          user: this.getUser(),
+        };
+        this._store.updateSession(data);
+      })
+    );
+  }
+
+  /**
    * Method that allow us to register a new account
    * @return Observable<Response>
    * @example
@@ -118,6 +150,15 @@ export class AuthService {
     return this._http.patch<Response>(this._url + this._version + '/auth/reset-password', {otp, password});
   }
 
+  /**
+   * Method that allow us to verify the account
+   * @return Observable<Response>
+   * @example
+   * private _authService = inject(AuthService);
+   * this._authService.verifyAccount('123456', '0.0,0.0');
+   * @param otp
+   * @param coordinates
+   */
   public verifyAccount(otp: string, coordinates: string): Observable<Response> {
     return this._http.post<Response>(this._url + this._version + '/auth/verify', {otp, coordinates});
   }
@@ -183,6 +224,22 @@ export class AuthService {
   }
 
   /**
+   * Method that allow us to get the refresh token from local or session storage
+   * @return string | null
+   * @example
+   * private _authService = inject(AuthService);
+   * const refreshToken = this._authService.getRefreshToken();
+   */
+  public getRefreshToken(): string | null {
+    const remember = this._cookieService.get('remember_me');
+    if (remember === 'true') {
+      return localStorage.getItem('refresh_token');
+    }
+
+    return sessionStorage.getItem('refresh_token');
+  }
+
+  /**
    * Method that allow us to get current geolocation
    * @return Promise<IGeolocation>
    * @example
@@ -222,8 +279,6 @@ export class AuthService {
     if (!token) return false;
 
     return !(!this._cipher.verifyJWT(token) || this._jwtHelper.isTokenExpired(token));
-
-
   }
 
   /**
@@ -241,28 +296,75 @@ export class AuthService {
     return payload.user.id || '';
   }
 
+  /**
+   * Method that allow us to clear the session
+   * @return void
+   * @example
+   * private _authService = inject(AuthService);
+   * this._authService.clearSession();
+   */
   public clearSession(): void {
     this._cookieService.delete('remember_me');
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     sessionStorage.removeItem('access_token');
     sessionStorage.removeItem('refresh_token');
+    db.userTable.clear();
     this._store.logout();
   }
 
+  /**
+   * Method that allow us to clear the temporary token
+   * @return void
+   * @example
+   * private _authService = inject(AuthService);
+   * this._authService.clearTempToken();
+   */
   public clearTempToken(): void {
     sessionStorage.removeItem('temp_token');
   }
 
+  /**
+   * Method that allow us to get the temporary token
+   * @return string | null
+   * @example
+   * private _authService = inject(AuthService);
+   * const tempToken = this._authService.getTempToken();
+   */
   public getTempToken(): string | null {
     return sessionStorage.getItem('temp_token');
   }
 
+  /**
+   * Method that allow us to set the temporary token
+   * @return void
+   * @example
+   * private _authService = inject(AuthService);
+   * this._authService.setTempToken('temp_token');
+   * @param tempToken
+   */
   public setTempToken(tempToken: string): void {
     sessionStorage.setItem('temp_token', tempToken);
   }
 
+  /**
+   * Method that allow us to validate a token
+   * @return boolean
+   * @example
+   * private _authService = inject(AuthService);
+   * const isValid = this._authService.isTokenValid('token');
+   * @param token
+   */
   public isTokenValid(token: string): boolean {
     return !(!this._cipher.verifyJWT(token) || this._jwtHelper.isTokenExpired(token));
+  }
+
+  public mustRefreshToken(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+
+    const expirationDate = this._jwtHelper.getRemainingTime(token);
+    // less than 15 seconds
+    return expirationDate < 15000;
   }
 }
