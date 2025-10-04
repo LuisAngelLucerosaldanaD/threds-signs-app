@@ -5,7 +5,7 @@
         Threads and Signs
       </div>
       <div class="text-color text-3xl font-semibold leading-normal">
-        Bienvenido de nuevo, {{_userStore.user()?.name}}!
+        Bienvenido de nuevo, {{ _userStore.user()?.name }}!
       </div>
     </div>
     <div class="flex gap-2 whitespace-nowrap flex-nowrap">
@@ -63,7 +63,7 @@
           </div>
           <div class="flex items-center gap-2 ng-star-inserted">
             <div class="w-3 h-3 rounded-full" style="background-color: rgb(226, 232, 240);"></div>
-            <span class="font-medium text-color leading-6">Con Error</span>
+            <span class="font-medium text-color leading-6">Con error</span>
           </div>
         </div>
       </div>
@@ -106,23 +106,24 @@
           <div class="flex items-center gap-2 ng-star-inserted">
             <div class="w-2 h-2 rounded-full" style="background-color: rgb(245, 158, 11);"></div>
             <div class="text-color uppercase font-medium leading-6 flex-1"> Han Firmado <span
-              class="text-muted-color">(15%)</span></div>
-            <div class="leading-6 font-medium text-color">27</div>
+              class="text-muted-color">({{ reportSigner().signed.percentage }}%)</span></div>
+            <div class="leading-6 font-medium text-color">{{ reportSigner().signed.count }}</div>
           </div>
           <div class="flex items-center gap-2 ng-star-inserted">
             <div class="w-2 h-2 rounded-full" style="background-color: rgb(113, 113, 121);"></div>
             <div class="text-color uppercase font-medium leading-6 flex-1"> Pendientes por Firmar <span
-              class="text-muted-color">(5%)</span></div>
-            <div class="leading-6 font-medium text-color">4</div>
+              class="text-muted-color">({{ reportSigner().pending.percentage }}%)</span></div>
+            <div class="leading-6 font-medium text-color">{{ reportSigner().pending.count }}</div>
           </div>
           <div class="flex items-center gap-2 ng-star-inserted">
             <div class="w-2 h-2 rounded-full" style="background-color: rgb(34, 197, 94);"></div>
             <div class="text-color uppercase font-medium leading-6 flex-1"> No Firmaron <span
-              class="text-muted-color">(25%)</span></div>
-            <div class="leading-6 font-medium text-color">12</div>
+              class="text-muted-color">({{ reportSigner().unsigned.percentage }}%)</span></div>
+            <div class="leading-6 font-medium text-color">{{ reportSigner().unsigned.count }}</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+<app-toast/>

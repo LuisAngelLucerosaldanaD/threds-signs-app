@@ -12,6 +12,7 @@ import {IGeolocation} from '../../models/auth/geo';
 import {AuthStore} from '../../store/auth.store';
 import {RESPONSE_CODES} from '../../utils/constants/response';
 import {db} from '../db/db.service';
+import {IChangePassword} from '../../models/user/user';
 
 @Injectable({
   providedIn: 'root'
@@ -81,7 +82,7 @@ export class AuthService {
    */
   public refreshToken(): Observable<Response<string>> {
     const refresh = this.getRefreshToken();
-    return this._http.put<Response<string>>(this._url + this._version + "/auth/refresh-token", {refresh_token: refresh}).pipe(
+    return this._http.put<Response<string>>(this._url + this._version + "/auth/refresh", {refresh_token: refresh}).pipe(
       tap(res => {
         if (res.error) return;
 
@@ -161,6 +162,22 @@ export class AuthService {
    */
   public verifyAccount(otp: string, coordinates: string): Observable<Response> {
     return this._http.post<Response>(this._url + this._version + '/auth/verify', {otp, coordinates});
+  }
+
+  /**
+   * Method that allow us to change the password
+   * @return Observable<Response>
+   * @example
+   * private _authService = inject(AuthService);
+   * const data = {
+   *   old_password: 'oldpassword',
+   *   password: 'newpassword'
+   * }
+   * this._authService.changePassword(data);
+   * @param data
+   */
+  public changePassword(data: IChangePassword): Observable<Response> {
+    return this._http.patch<Response>(this._url + this._version + '/auth/change-password', data);
   }
 
   /**
@@ -359,12 +376,17 @@ export class AuthService {
     return !(!this._cipher.verifyJWT(token) || this._jwtHelper.isTokenExpired(token));
   }
 
+  /**
+   * Method that allow us to know if we must refresh the token
+   * @return boolean
+   * @example
+   * private _authService = inject(AuthService);
+   * const mustRefresh = this._authService.mustRefreshToken();
+   */
   public mustRefreshToken(): boolean {
     const token = this.getToken();
     if (!token) return false;
-
     const expirationDate = this._jwtHelper.getRemainingTime(token);
-    // less than 15 seconds
     return expirationDate < 15000;
   }
 }

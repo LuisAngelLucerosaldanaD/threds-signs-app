@@ -1,0 +1,168 @@
+<div class="z-40 h-screen w-screen fixed top-0 left-0 bg-black/20" (click)="close.emit()"></div>
+<div class="fixed h-full top-0 right-0 bg-white w-[400px] min-w-[400px] z-50 py-6 px-3">
+  <div class="flex flex-col items-center justify-center">
+    <div class="relative group">
+      <img [src]="_userStore.user()?.setting?.profile_picture" alt="img profile"
+           class="rounded-full w-44 h-44 select-none text-xl">
+      <div (click)="inpPhoto.click()"
+           class="absolute inset-0 bg-black bg-opacity-50 group-hover:flex hidden rounded-full items-center justify-center cursor-pointer text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+             stroke="currentColor" class="size-8">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"/>
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"/>
+        </svg>
+      </div>
+      <input type="file" name="photo" id="photo" #inpPhoto hidden>
+    </div>
+    <div class="leading-6 font-medium text-color mt-4 w-full text-center">
+      {{ _userStore.user()?.name + ' ' + _userStore.user()?.lastname }}
+    </div>
+    <div class="leading-5 text-sm text-muted-color mt-1 w-full text-center">
+      &#64;{{ _userStore.user()?.username }}
+    </div>
+  </div>
+  <div class="flex flex-col gap-4 mt-4">
+    <div class="flex p-1 bg-slate-100 rounded-md">
+      <div class="tap{{tab() === 'info' ? ' active' : ''}}" (click)="tab.set('info')">
+        Información
+      </div>
+      <div class="tap {{tab() === 'pwd' ? ' active' : ''}}" (click)="tab.set('pwd')">
+        Contraseña
+      </div>
+      <div class="tap {{tab() === 'security' ? ' active' : ''}}" (click)="tab.set('security')">
+        Seguridad
+      </div>
+    </div>
+    <div class="w-full h-full">
+      @if (tab() === 'info') {
+        <form [formGroup]="userForm" class="w-full grid grid-cols-2 gap-2">
+          <div class="i-field">
+            <label for="name" class="text-color leading-6 font-medium">Nombres</label>
+            <div class="relative flex w-full flex-wrap items-stretch mb-3">
+              <input class="relative" id="name" type="text" formControlName="name" onlyText>
+            </div>
+          </div>
+          <div class="i-field">
+            <label for="lastname" class="text-color leading-6 font-medium">Apellidos</label>
+            <div class="relative flex w-full flex-wrap items-stretch mb-3">
+              <input class="relative" id="lastname" type="text" formControlName="lastname" onlyText>
+            </div>
+          </div>
+
+          <div class="i-field">
+            <label for="type_document" class="text-color leading-6 font-medium">Tipo de documento</label>
+            <div class="relative flex w-full flex-wrap items-stretch mb-3">
+              <select class="relative" formControlName="type_document" id="type_document">
+                <option [value]="1">Documento Nacional de Identidad</option>
+                <option [value]="2">ódigo Único de Identificación Tributaria</option>
+                <option [value]="3">Código Único de Identificación Laboral</option>
+                <option [value]="4">Pasaporte</option>
+                <option [value]="5">Otro tipo de identificación</option>
+              </select>
+            </div>
+          </div>
+          <div class="i-field">
+            <label for="document" class="text-color leading-6 font-medium">Documento</label>
+            <div class="relative flex w-full flex-wrap items-stretch mb-3">
+              <input class="relative" id="document" type="text" formControlName="document">
+            </div>
+          </div>
+
+          <div class="i-field">
+            <label for="username" class="text-color leading-6 font-medium">Nombre de usuario</label>
+            <div class="relative flex w-full flex-wrap items-stretch mb-3">
+              <input class="relative" id="username" type="text" formControlName="username">
+            </div>
+          </div>
+          <div class="i-field">
+            <label for="email" class="text-color leading-6 font-medium">Correo</label>
+            <div class="relative flex w-full flex-wrap items-stretch mb-3">
+              <input class="relative" id="email" type="email" formControlName="email">
+            </div>
+          </div>
+
+          <div class="i-field">
+            <label for="birthdate" class="text-color leading-6 font-medium">Fecha de nacimiento</label>
+            <div class="relative flex w-full flex-wrap items-stretch mb-3">
+              <input class="relative" id="birthdate" type="text" formControlName="birthdate">
+            </div>
+          </div>
+
+        </form>
+        <button (click)="updateUser()" class="btn-save">
+          Guardar
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+               stroke="currentColor"
+               class="size-5">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M16.5 3.75V16.5L12 14.25 7.5 16.5V3.75m9 0H18A2.25 2.25 0 0 1 20.25 6v12A2.25 2.25 0 0 1 18 20.25H6A2.25 2.25 0 0 1 3.75 18V6A2.25 2.25 0 0 1 6 3.75h1.5m9 0h-9"/>
+          </svg>
+        </button>
+      } @else if (tab() === 'pwd') {
+        <form [formGroup]="pwdForm" class="w-full grid grid-cols-2 gap-2">
+          <div class="i-field">
+            <label for="current_password" class="text-color leading-6 font-medium">Contraseña actual</label>
+            <div class="relative flex w-full flex-wrap items-stretch mb-3">
+              <input class="relative" id="current_password" type="password" formControlName="current_password">
+            </div>
+          </div>
+          <div class="i-field">
+            <label for="new_password" class="text-color leading-6 font-medium">Nueva contraseña</label>
+            <div class="relative flex w-full flex-wrap items-stretch mb-3">
+              <input class="relative" id="new_password" type="password" formControlName="new_password">
+            </div>
+          </div>
+
+          <div class="i-field">
+            <label for="confirm_password" class="text-color leading-6 font-medium">Confirmar contraseña</label>
+            <div class="relative flex w-full flex-wrap items-stretch mb-3">
+              <input class="relative" id="confirm_password" type="password" formControlName="confirm_password">
+            </div>
+          </div>
+        </form>
+        <button class="btn-save" (click)="changePassword()">
+          Guardar
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+               stroke="currentColor"
+               class="size-5">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M16.5 3.75V16.5L12 14.25 7.5 16.5V3.75m9 0H18A2.25 2.25 0 0 1 20.25 6v12A2.25 2.25 0 0 1 18 20.25H6A2.25 2.25 0 0 1 3.75 18V6A2.25 2.25 0 0 1 6 3.75h1.5m9 0h-9"/>
+          </svg>
+        </button>
+      } @else {
+        <form [formGroup]="secForm" class="w-full grid grid-cols-2 gap-2">
+          <div class="i-field">
+            <label for="verified_email" class="text-color leading-6 font-medium">Verificación Correo</label>
+            <div class="relative flex w-full flex-wrap items-stretch mb-3">
+              <input class="relative" id="verified_email" type="text" formControlName="verified_email">
+            </div>
+          </div>
+          <div class="i-field">
+            <label for="verified_sms" class="text-color leading-6 font-medium">Verificación SMS</label>
+            <div class="relative flex w-full flex-wrap items-stretch mb-3">
+              <input class="relative" id="verified_sms" type="text" formControlName="verified_sms">
+            </div>
+          </div>
+
+          <div class="i-field">
+            <label for="required_2fa" class="text-color leading-6 font-medium">Autenticación doble factor</label>
+            <div class="relative flex w-full flex-wrap items-stretch mb-3">
+              <label class="inline-flex items-center mb-5 cursor-pointer">
+                <input type="checkbox" id="required_2fa" class="sr-only peer" formControlName="required_2fa"
+                       (change)="changeSecuritySettings()">
+                <div
+                  class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+          </div>
+        </form>
+      }
+    </div>
+  </div>
+</div>
+
+<app-toast/>
+<app-block-ui [show]="isLoading()"/>
+<trs-confirm/>

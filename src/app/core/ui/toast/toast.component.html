@@ -1,4 +1,4 @@
-<div class="fixed top-0 right-0 w-full">
+<div class="fixed top-0 right-0 w-full z-50">
   @for (message of messages; track message; let i = $index) {
     <app-toast-item class="p-8" [message]="message" [hideTransformOptions]="hideTransformOptions()"
                     @toastAnimation

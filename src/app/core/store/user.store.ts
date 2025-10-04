@@ -1,4 +1,4 @@
-import {IUser} from '../models/user/user';
+import {IReqUser, IUser} from '../models/user/user';
 import {patchState, signalStore, withMethods, withState} from '@ngrx/signals';
 
 type IUserStore = {

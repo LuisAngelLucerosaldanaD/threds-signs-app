@@ -19,3 +19,18 @@ export interface IUserSettings {
   profile_picture: string;
   required_2fa: boolean;
 }
+
+export interface IReqUser {
+  id: string;
+  name: string;
+  lastname: string;
+  document: string;
+  type_document: number;
+  email: string;
+  birthdate: string;
+}
+
+export interface IChangePassword {
+  old_password: string;
+  password: string;
+}

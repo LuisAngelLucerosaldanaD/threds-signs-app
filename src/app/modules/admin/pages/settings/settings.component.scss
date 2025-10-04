@@ -1,0 +1,12 @@
+.tap {
+  @apply text-sm flex items-center justify-center px-2 rounded cursor-pointer flex-1 text-slate-500;
+}
+
+.active {
+  @apply bg-white text-slate-700;
+}
+
+
+.btn-save {
+  @apply w-full h-8 bg-white border border-slate-200 rounded-md flex items-center justify-center gap-2 text-sm text-slate-600 hover:bg-slate-100 mt-6;
+}

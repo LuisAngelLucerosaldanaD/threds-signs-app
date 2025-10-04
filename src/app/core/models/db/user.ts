@@ -16,3 +16,4 @@ export interface IUserDB {
   created_at: string;
   updated_at: string;
 }
+

@@ -10,13 +10,17 @@ import {liveQuery} from 'dexie';
 import {db} from '../../core/services/db/db.service';
 import {ToastComponent} from '../../core/ui/toast/toast.component';
 import {BlockUiComponent} from '../../core/ui/block-ui/block-ui.component';
+import {ReactiveFormsModule} from '@angular/forms';
+import {SettingsComponent} from './pages/settings/settings.component';
 
 @Component({
   selector: 'app-admin',
   imports: [
     RouterOutlet,
     ToastComponent,
-    BlockUiComponent
+    BlockUiComponent,
+    ReactiveFormsModule,
+    SettingsComponent
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'
@@ -34,7 +38,8 @@ export class AdminComponent implements OnInit, OnDestroy {
   protected readonly _userStore = inject(UserStore);
 
   protected isLoading = signal(false);
-  private timeRefresh: any;
+  protected showSidebar = signal(false);
+  private intervalRefresh: any;
 
   protected user$ = liveQuery(
     () => this._getUserFromDB()
@@ -57,7 +62,7 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this._subscriptions.unsubscribe();
-    clearTimeout(this.timeRefresh);
+    clearInterval(this.intervalRefresh);
   }
 
   private _loadUserProfile(userId: string) {
@@ -87,7 +92,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   private refreshToken(): void {
-    this.timeRefresh = setTimeout(() => {
+    this.intervalRefresh = setInterval(() => {
       if (this._authService.mustRefreshToken()) {
         this._authService.refreshToken().subscribe({
           next: (res) => {

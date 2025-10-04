@@ -1,6 +1,6 @@
 <div (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()"
      [@messageState]="{ value: 'visible', params: { showTransformParams: showTransformOptions(), hideTransformParams: hideTransformOptions(), showTransitionParams: showTransitionOptions(), hideTransitionParams: hideTransitionOptions() } }"
-     class="flex items-center space-x-4 bg-white rounded-lg border ml-auto border-zc-50 p-4 drop-shadow-lg"
+     class="flex items-center space-x-4 bg-white rounded-lg border ml-auto border-zc-50 p-4 drop-shadow-lg z-50"
      style="max-width: 400px;">
   @switch (message().type) {
     @case ('info') {
