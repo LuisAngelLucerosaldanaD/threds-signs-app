@@ -1,4 +1,4 @@
-export interface Response<T = any> {
+export interface IResponse<T = any> {
   error: boolean;
   msg: string;
   code: number;

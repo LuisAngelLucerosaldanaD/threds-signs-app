@@ -1,5 +1,5 @@
 import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
+import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {UserService} from '../../core/services/user/user.service';
 import {Subscription} from 'rxjs';
 import {ToastService} from '../../core/services/ui/toast.service';
@@ -20,7 +20,9 @@ import {SettingsComponent} from './pages/settings/settings.component';
     ToastComponent,
     BlockUiComponent,
     ReactiveFormsModule,
-    SettingsComponent
+    SettingsComponent,
+    RouterLink,
+    RouterLinkActive
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'

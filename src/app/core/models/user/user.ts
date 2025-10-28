@@ -34,3 +34,9 @@ export interface IChangePassword {
   old_password: string;
   password: string;
 }
+
+export interface IUpdatePhoto {
+  id: string;
+  name: string;
+  picture: string;
+}

@@ -2,8 +2,8 @@ import {inject, Injectable} from '@angular/core';
 import {EnvServiceFactory} from '../env/env.service.provider';
 import {HttpClient} from '@angular/common/http';
 import {Observable, tap} from 'rxjs';
-import {IChangePassword, IReqUser, IUser, IUserSettings} from '../../models/user/user';
-import {Response} from '../../models/response';
+import {IReqUser, IUpdatePhoto, IUser, IUserSettings} from '../../models/user/user';
+import {IResponse} from '../../models/IResponse';
 import {db, DbService} from '../db/db.service';
 import {UserStore} from '../../store/user.store';
 
@@ -18,14 +18,14 @@ export class UserService {
 
   /**
    * Get user profile by user ID
-   * @return Observable<Response<IUser>>
+   * @return Observable<IResponse<IUser>>
    * @example
    * private _userService = inject(UserService);
    * this._userService.getUserProfile('userId').subscribe();
    * @param userId
    */
-  public getUserProfile(userId: string): Observable<Response<IUser>> {
-    return this._http.get<Response<IUser>>(`${this._url}${this._version}/user/${userId}`).pipe(
+  public getUserProfile(userId: string): Observable<IResponse<IUser>> {
+    return this._http.get<IResponse<IUser>>(`${this._url}${this._version}/user/${userId}`).pipe(
       tap(res => {
         if (!res.error) {
           const data = res.data;
@@ -37,15 +37,15 @@ export class UserService {
 
   /**
    * Update user profile
-   * @return Observable<Response>
+   * @return Observable<IResponse>
    * @example
    * private _userService = inject(UserService);
    * const user: IReqUser = {id: '1', name: 'John', lastname: 'Doe', document: '123456', type_document: 1, email: 'john.doe@test.com', birthdate: '1990-01-01'};
    * this._userService.updateUserProfile(user).subscribe();
    * @param user
    */
-  public updateUserProfile(user: IReqUser): Observable<Response> {
-    return this._http.put<Response>(this._url + this._version + '/user', user).pipe(tap(res => {
+  public updateUserProfile(user: IReqUser): Observable<IResponse> {
+    return this._http.put<IResponse>(this._url + this._version + '/user', user).pipe(tap(res => {
       if (!res.error) {
         const data: IUser = {
           id: this._userStore.user()?.id || '',
@@ -63,6 +63,34 @@ export class UserService {
 
         this._userStore.setUser(data);
         db.userTable.put(DbService.parseUser(data));
+      }
+    }));
+  }
+
+  /**
+   * Update profile picture
+   * @return Observable<IResponse>
+   * @example
+   * private _userService = inject(UserService);
+   * const data: IUpdatePhoto = {photo: 'base64string'};
+   * this._userService.updateProfilePicture(data).subscribe();
+   * @param data
+   */
+  public updateProfilePicture(data: IUpdatePhoto): Observable<IResponse> {
+    return this._http.put<IResponse>(this._url + this._version + '/user/photo', data).pipe(tap(res => {
+      if (!res.error) {
+        const user = this._userStore.user();
+        if (user) {
+          const updatedUser: IUser = {
+            ...user,
+            setting: {
+              ...user.setting,
+              profile_picture: data.picture
+            }
+          };
+          this._userStore.setUser(updatedUser);
+          db.userTable.put(DbService.parseUser(updatedUser));
+        }
       }
     }));
   }

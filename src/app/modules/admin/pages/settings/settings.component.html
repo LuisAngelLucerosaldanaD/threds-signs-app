@@ -14,7 +14,8 @@
                 d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"/>
         </svg>
       </div>
-      <input type="file" name="photo" id="photo" #inpPhoto hidden>
+      <input type="file" name="photo" id="photo" #inpPhoto hidden (change)="processProfile($event)"
+             accept="image/*">
     </div>
     <div class="leading-6 font-medium text-color mt-4 w-full text-center">
       {{ _userStore.user()?.name + ' ' + _userStore.user()?.lastname }}

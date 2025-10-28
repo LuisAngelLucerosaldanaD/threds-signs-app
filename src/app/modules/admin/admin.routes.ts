@@ -13,6 +13,10 @@ export const AdminRoutes: Routes = [
         loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent)
       },
       {
+        path: 'workflows',
+        loadComponent: () => import('./pages/workflows/workflows.component').then(m => m.WorkflowsComponent)
+      },
+      {
         path: '**',
         redirectTo: 'home',
         pathMatch: 'full',

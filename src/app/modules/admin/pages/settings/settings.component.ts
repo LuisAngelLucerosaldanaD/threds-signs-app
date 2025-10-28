@@ -6,13 +6,14 @@ import {formatDate} from '@angular/common';
 import {UserService} from '../../../../core/services/user/user.service';
 import {Subscription} from 'rxjs';
 import {ToastService} from '../../../../core/services/ui/toast.service';
-import {IChangePassword, IReqUser} from '../../../../core/models/user/user';
+import {IChangePassword, IReqUser, IUpdatePhoto} from '../../../../core/models/user/user';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ToastComponent} from '../../../../core/ui/toast/toast.component';
 import {BlockUiComponent} from '../../../../core/ui/block-ui/block-ui.component';
 import {AuthService} from '../../../../core/services/auth/auth.service';
 import {ConfirmComponent} from '../../../../core/ui/confirm/confirm.component';
 import {ConfirmService} from '../../../../core/services/ui/confirm.service';
+import {FileHelper} from '../../../../core/utils/file/file';
 
 @Component({
   selector: 'app-settings',
@@ -46,6 +47,8 @@ export class SettingsComponent implements OnDestroy {
   // Signals
   protected tab = signal<'info' | 'pwd' | 'security'>('info');
   protected isLoading = signal<boolean>(false);
+  protected profile = signal('');
+  protected profileName = signal('');
 
   // Forms
   protected userForm: FormGroup = new FormGroup({
@@ -82,6 +85,97 @@ export class SettingsComponent implements OnDestroy {
 
   ngOnDestroy() {
     this._subscriptions.unsubscribe();
+  }
+
+  private _updateSettings(): void {
+    this.isLoading.set(true);
+    this._subscriptions.add(
+      this._authServices.updateSettings(this.secForm.get('required_2fa')?.value).subscribe({
+        next: (res) => {
+          if (res.error) {
+            this._toastService.add({type: "error", message: res.msg});
+            return;
+          }
+
+          this._toastService.add({type: 'success', message: 'Configuración de seguridad actualizada correctamente.'});
+          this.secForm.markAsPristine();
+        },
+        error: (err: HttpErrorResponse) => {
+          console.error(err);
+          this._toastService.add({
+            type: 'error',
+            message: err.message || 'Error al actualizar la configuración de seguridad.'
+          });
+          this.isLoading.set(false);
+        },
+        complete: () => this.isLoading.set(false)
+      })
+    );
+  }
+
+  private _updatePhoto(): void {
+    if (!this.profile()) {
+      this._toastService.add({type: 'error', message: 'Por favor, seleccione una imagen.'});
+      return;
+    }
+
+    const data: IUpdatePhoto = {
+      id: this._userStore.user()?.id || '',
+      picture: this.profile(),
+      name: this.profileName()
+    };
+
+    this.isLoading.set(true);
+    this._subscriptions.add(
+      this._userServices.updateProfilePicture(data).subscribe({
+        next: (res) => {
+          if (res.error) {
+            this._toastService.add({type: "error", message: res.msg});
+            return;
+          }
+
+          this._toastService.add({type: 'success', message: 'Foto de perfil actualizada correctamente.'});
+          this.profile.set('');
+          this.profileName.set('');
+        },
+        error: (err: HttpErrorResponse) => {
+          console.error(err);
+          this._toastService.add({type: 'error', message: err.message || 'Error al actualizar la foto de perfil.'});
+          this.isLoading.set(false);
+        },
+        complete: () => this.isLoading.set(false)
+      })
+    );
+  }
+
+  protected processProfile(ev: any): void {
+    const file: File = ev.target.files[0];
+    if (!file) return;
+
+    const mimeTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+    if (!mimeTypes.includes(file.type)) {
+      this._toastService.add({type: 'error', message: 'El archivo debe ser una imagen (png, jpg, jpeg).'});
+      return;
+    }
+
+    if (file.size > (2 * 1024 * 1024)) {
+      this._toastService.add({type: 'error', message: 'El tamaño de la imagen no debe exceder los 2MB.'});
+      return;
+    }
+
+    this._subscriptions.add(
+      FileHelper.fileReader(file).subscribe({
+        next: res => {
+          this.profileName.set(file.name);
+          this.profile.set(res.split(',')[1]);
+          this._updatePhoto();
+        },
+        error: (err) => {
+          console.error(err);
+          this._toastService.add({type: 'error', message: err.error.msg});
+        }
+      })
+    );
   }
 
   protected updateUser(): void {
@@ -173,12 +267,7 @@ export class SettingsComponent implements OnDestroy {
       header: 'Configuración de Seguridad',
       message: '¿Esta seguro de deshabilitar la autenticación de dos factores?',
       key: 'confirm',
-      accept: () => {
-        this._toastService.add({type: 'success', message: 'Confirmed'});
-      },
-      reject: () => {
-        this._toastService.add({type: 'error', message: 'Rejected'});
-      }
+      accept: () => this._updateSettings(),
     });
   }
 

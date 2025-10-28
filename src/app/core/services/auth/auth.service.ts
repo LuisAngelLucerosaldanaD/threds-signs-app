@@ -6,7 +6,7 @@ import {Cipher} from '../../utils/security/cipher';
 import {JwtHelper} from '../../utils/jwt/jwt';
 import {Observable, tap} from 'rxjs';
 import {ICredentials, IOtp, IRegister, ISession} from '../../models/auth/session';
-import {Response} from '../../models/response';
+import {IResponse} from '../../models/IResponse';
 import {CookieService} from '../cookie/cookie.service';
 import {IGeolocation} from '../../models/auth/geo';
 import {AuthStore} from '../../store/auth.store';
@@ -33,7 +33,7 @@ export class AuthService {
   /**
    * Method that allow us to login
    * @param credentials - The credentials to login
-   * @return Observable<Response<ISession>>
+   * @return Observable<IResponse<ISession>>
    * @example
    * private _authService = inject(AuthService);
    * const data = {
@@ -44,8 +44,8 @@ export class AuthService {
    * }
    * this._authService.login(data);
    */
-  public login(credentials: ICredentials): Observable<Response<ISession>> {
-    return this._http.post<Response<ISession>>(this._url + this._version + '/auth', credentials).pipe(
+  public login(credentials: ICredentials): Observable<IResponse<ISession>> {
+    return this._http.post<IResponse<ISession>>(this._url + this._version + '/auth', credentials).pipe(
       tap(res => {
         this._setSession(res, credentials.remember_me);
       })
@@ -55,7 +55,7 @@ export class AuthService {
   /**
    * Method that allow us to login with OTP
    * @param credentials
-   * @return Observable<Response<ISession>>
+   * @return Observable<IResponse<ISession>>
    * @example
    * private _authService = inject(AuthService);
    * const data = {
@@ -65,8 +65,8 @@ export class AuthService {
    * }
    * this._authService.loginWithOtp(data);
    */
-  public loginWithOtp(credentials: IOtp): Observable<Response<ISession>> {
-    return this._http.post<Response<ISession>>(this._url + this._version + '/auth/otp', credentials).pipe(
+  public loginWithOtp(credentials: IOtp): Observable<IResponse<ISession>> {
+    return this._http.post<IResponse<ISession>>(this._url + this._version + '/auth/otp', credentials).pipe(
       tap(res => {
         this._setSession(res, credentials.remember_me);
       })
@@ -75,14 +75,14 @@ export class AuthService {
 
   /**
    * Method that allow us to refresh the access token
-   * @return Observable<Response<string>>
+   * @return Observable<IResponse<string>>
    * @example
    * private _authService = inject(AuthService);
    * this._authService.refreshToken();
    */
-  public refreshToken(): Observable<Response<string>> {
+  public refreshToken(): Observable<IResponse<string>> {
     const refresh = this.getRefreshToken();
-    return this._http.put<Response<string>>(this._url + this._version + "/auth/refresh", {refresh_token: refresh}).pipe(
+    return this._http.put<IResponse<string>>(this._url + this._version + "/auth/refresh", {refresh_token: refresh}).pipe(
       tap(res => {
         if (res.error) return;
 
@@ -106,7 +106,7 @@ export class AuthService {
 
   /**
    * Method that allow us to register a new account
-   * @return Observable<Response>
+   * @return Observable<IResponse>
    * @example
    * private _authService = inject(AuthService);
    * const account = {
@@ -122,51 +122,51 @@ export class AuthService {
    * this._authService.register(account);
    * @param account
    */
-  public register(account: IRegister): Observable<Response> {
-    return this._http.post<Response>(this._url + this._version + '/auth/register', account);
+  public register(account: IRegister): Observable<IResponse> {
+    return this._http.post<IResponse>(this._url + this._version + '/auth/register', account);
   }
 
   /**
    * Method that allow us to recover the account
-   * @return Observable<Response>
+   * @return Observable<IResponse>
    * @example
    * private _authService = inject(AuthService);
    * this._authService.recovery('joe.dow');
    * @param email
    */
-  public recovery(email: string): Observable<Response> {
-    return this._http.post<Response>(this._url + this._version + '/auth/recover', {email});
+  public recovery(email: string): Observable<IResponse> {
+    return this._http.post<IResponse>(this._url + this._version + '/auth/recover', {email});
   }
 
   /**
    * Method that allow us to reset the password
-   * @return Observable<Response>
+   * @return Observable<IResponse>
    * @example
    * private _authService = inject(AuthService);
    * this._authService.resetPassword('123456', 'newpassword');
    * @param otp
    * @param password
    */
-  public resetPassword(otp: string, password: string): Observable<Response> {
-    return this._http.patch<Response>(this._url + this._version + '/auth/reset-password', {otp, password});
+  public resetPassword(otp: string, password: string): Observable<IResponse> {
+    return this._http.patch<IResponse>(this._url + this._version + '/auth/reset-password', {otp, password});
   }
 
   /**
    * Method that allow us to verify the account
-   * @return Observable<Response>
+   * @return Observable<IResponse>
    * @example
    * private _authService = inject(AuthService);
    * this._authService.verifyAccount('123456', '0.0,0.0');
    * @param otp
    * @param coordinates
    */
-  public verifyAccount(otp: string, coordinates: string): Observable<Response> {
-    return this._http.post<Response>(this._url + this._version + '/auth/verify', {otp, coordinates});
+  public verifyAccount(otp: string, coordinates: string): Observable<IResponse> {
+    return this._http.post<IResponse>(this._url + this._version + '/auth/verify', {otp, coordinates});
   }
 
   /**
    * Method that allow us to change the password
-   * @return Observable<Response>
+   * @return Observable<IResponse>
    * @example
    * private _authService = inject(AuthService);
    * const data = {
@@ -176,8 +176,20 @@ export class AuthService {
    * this._authService.changePassword(data);
    * @param data
    */
-  public changePassword(data: IChangePassword): Observable<Response> {
-    return this._http.patch<Response>(this._url + this._version + '/auth/change-password', data);
+  public changePassword(data: IChangePassword): Observable<IResponse> {
+    return this._http.patch<IResponse>(this._url + this._version + '/auth/change-password', data);
+  }
+
+  /**
+   * Method that allow us to update the user settings
+   * @return Observable<IResponse>
+   * @example
+   * private _authService = inject(AuthService);
+   * this._authService.updateSettings(true);
+   * @param twoFA
+   */
+  public updateSettings(twoFA: boolean): Observable<IResponse> {
+    return this._http.patch<IResponse>(this._url + this._version + '/auth/settings', {two_fa: twoFA});
   }
 
   /**
@@ -186,7 +198,7 @@ export class AuthService {
    * @param rememberMe
    * @private
    */
-  private _setSession(session: Response<ISession>, rememberMe: boolean): void {
+  private _setSession(session: IResponse<ISession>, rememberMe: boolean): void {
     if (session.error) {
       throw new Error(session.msg);
     }

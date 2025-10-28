@@ -2,20 +2,20 @@ import {inject, Injectable} from '@angular/core';
 import {EnvServiceFactory} from '../env/env.service.provider';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {IWorkflow} from '../../models/wf/workflow';
 import {IResponse} from '../../models/IResponse';
-import {ReportSigners} from '../../models/bi/signers';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BiService {
+export class WorkflowsService {
 
   private readonly _url: string = EnvServiceFactory().REST_API;
-  private readonly _version: string = '/api/v1';
+  private readonly _version: string = '/api/v1/';
 
   private readonly _http: HttpClient = inject(HttpClient);
 
-  public getSignersReport(startDate: string | null, endDate: string | null): Observable<IResponse<ReportSigners>> {
-    return this._http.get<IResponse<ReportSigners>>(`${this._url}${this._version}/bi/report/signers?start_date=${startDate || ''}&end_date=${endDate || ''}`);
+  public getWorkflows(): Observable<IResponse<IWorkflow[]>> {
+    return this._http.get<IResponse<IWorkflow[]>>(this._url + this._version + 'workflows');
   }
 }
